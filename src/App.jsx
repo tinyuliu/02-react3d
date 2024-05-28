@@ -1,33 +1,59 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect } from 'react';
+import * as THREE from "three";
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  useEffect(() => {
+    // Create the scene
+    const scene = new THREE.Scene();
+
+    // Create camera
+    const camera = new THREE.PerspectiveCamera(
+      45,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+
+    // Create renderer
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement); // renderer.domElement is the canvas
+
+    // Create geometry
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    // Create material
+    const material = new THREE.MeshBasicMaterial({color: 0xee82ee});
+    // Create mash
+    const cube = new THREE.Mesh(geometry, material);
+
+    // Add the cube to the scene
+    scene.add(cube);
+
+    // Set te camera position, the default will be 0
+    camera.position.z = 5;
+    camera.lookAt(0, 0, 0);
+
+
+    // Render function
+    function animate() {
+      //每一幀都調用函數
+      requestAnimationFrame(animate);
+      //旋轉
+      cube.rotation.x += 0.01;
+      cube.rotation.y += 0.01;
+
+      // Render
+      renderer.render(scene, camera);
+    }
+
+    animate();
+  }, []);
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className='App'>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
